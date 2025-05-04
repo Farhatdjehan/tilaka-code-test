@@ -1,5 +1,6 @@
 "use client";
 import ProfilePage from "@/components/ui/ProfilePage";
+import { encryptText } from "@/components/utils";
 import { useEffect, useState } from "react";
 
 const defaultData = {
@@ -9,8 +10,14 @@ const defaultData = {
   publicKey: "",
   showKey: false,
 };
+let flag = false;
+
 export default function Home() {
   const [userData, setUserData] = useState(defaultData);
+  const [processingText, setProcessingText] = useState({
+    iv: "",
+    ciphertext: "",
+  });
 
   useEffect(() => {
     getUserData();
@@ -42,6 +49,15 @@ export default function Home() {
       showKey: !prevData.showKey,
     }));
   };
+  const encryptEmail = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    email: string
+  ) => {
+    e.preventDefault();
+    flag = !flag;
+    const encrypting = await encryptText(email);
+    setProcessingText(encrypting);
+  };
   return (
     <div className="max-w-[900px] mx-auto px-5 py-10 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] items-center sm:items-start">
@@ -49,6 +65,8 @@ export default function Home() {
           data={userData}
           handleChange={handleChange}
           showPublicKey={showPublicKey}
+          encryptEmail={encryptEmail}
+          processingText={processingText}
         />
       </main>
     </div>

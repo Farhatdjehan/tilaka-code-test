@@ -9,13 +9,20 @@ interface UserDataResponse {
   showKey: boolean;
 }
 
+interface ProcessingText {
+  iv: string;
+  ciphertext: string;
+}
+
 interface UserData {
   data: UserDataResponse;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   showPublicKey: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  encryptEmail: (e: React.MouseEvent<HTMLButtonElement>, email: string) => void;
+  processingText: ProcessingText;
 }
 export default function ProfilePage(props: UserData) {
-  const { data, handleChange, showPublicKey } = props;
+  const { data, handleChange, showPublicKey, encryptEmail, processingText } = props;
   return (
     <>
       <ProfileHeader />
@@ -49,16 +56,32 @@ export default function ProfilePage(props: UserData) {
               />
             </div>
           </div>
-          <div className="flex flex-row gap-[28px] mb-[4rem]">
+          <div className="flex flex-row gap-[28px]  mb-[1.75rem]">
             <PublicKeyField
               data={data}
               label="Public Key"
               showPublicKey={showPublicKey}
             />
           </div>
-          <button className="py-[10px] float-right px-6 bg-[#295dda] rounded-[6px]">
-            Update Data
-          </button>
+
+          <div className="bg-[#808080] h-[80px] rounded-[8px] mb-[3rem] px-5 py-3">
+            <label className="text-[14px] font-semibold mb-4">Text Encrypted</label>
+            <div>
+              {processingText.ciphertext ? processingText.ciphertext : "-"}
+            </div>
+          </div>
+
+          <div className="w-full flex flex-row justify-end gap-[12px] mb-[1.75rem]">
+            <button
+              onClick={(e) => encryptEmail(e, data.email)}
+              className="py-[10px] w-1/2 md:w-auto float-right px-6 bg-[#808080] rounded-[6px]"
+            >
+              Enkripsi Email
+            </button>
+            <button className="py-[10px] w-1/2 md:w-auto float-right px-6 bg-[#295dda] rounded-[6px]">
+              Update Data
+            </button>
+          </div>
         </form>
       </div>
     </>
